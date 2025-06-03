@@ -89,7 +89,7 @@ class DiscreteSSL(nn.Module):
         save_path,
         ssl_model,
         kmeans_dataset,
-        vocoder_repo_id="speechbrain/hifigan-wavlm-k1000-LibriTTS",
+        kmeans_repo_id="speechbrain/hifigan-wavlm-k1000-LibriTTS",
         num_clusters=1000,
         layers_num=None,
         device="cpu",
@@ -104,7 +104,7 @@ class DiscreteSSL(nn.Module):
 
         self.kmeans_models, self.ssl_layer_ids, self.num_clusters = (
             self.load_kmeans(
-                vocoder_repo_id,
+                kmeans_repo_id,
                 kmeans_dataset,
                 model_name,
                 self.num_clusters,
@@ -119,7 +119,7 @@ class DiscreteSSL(nn.Module):
 
         self.tokenizer = DiscreteSSLTokenizer(self.num_clusters)
         self.codec_vocoder = UnitHIFIGAN.from_hparams(
-            source=vocoder_repo_id,
+            source=kmeans_repo_id,
             savedir=save_path,
         )
         self.codec_vocoder.tokenize = False
@@ -192,7 +192,7 @@ class DiscreteSSL(nn.Module):
                 )
         else:
             file_patterns.append(
-                f"kmeans/{kmeans_dataset}_{encoder_name}_k{num_clusters}*.pt"
+                f"kmeans/{kmeans_dataset}_hubert_k{num_clusters}_L9.pt"
             )
         kmeans_dir = snapshot_download(
             repo_id=repo_id, allow_patterns=file_patterns, cache_dir=cache_dir
@@ -318,6 +318,7 @@ class DiscreteSSL(nn.Module):
             ):
                 if layer_num not in SSL_layers:
                     continue
+                model.cluster_centers_ = model.cluster_centers_.astype(float)
                 tokens = model.predict(
                     feats[layer_num].flatten(end_dim=-2).cpu()
                 )

@@ -71,6 +71,7 @@ class HuBERT(Wav2Vec2):
         self,
         source,
         save_path,
+        device,
         output_norm=False,
         freeze=False,
         freeze_feature_extractor=False,
@@ -80,6 +81,7 @@ class HuBERT(Wav2Vec2):
         super().__init__(
             source=source,
             save_path=save_path,
+            device=device,
             output_norm=output_norm,
             freeze=freeze,
             freeze_feature_extractor=freeze_feature_extractor,

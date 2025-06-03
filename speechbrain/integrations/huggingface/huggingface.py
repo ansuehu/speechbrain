@@ -97,6 +97,7 @@ class HFTransformersInterface(nn.Module):
         self,
         source,
         save_path="",
+        device=None,
         for_pretraining=False,
         with_lm_head=False,
         with_casual_lm=False,
@@ -104,7 +105,6 @@ class HFTransformersInterface(nn.Module):
         quantization_config=None,
         freeze=False,
         cache_dir="pretrained_models",
-        device=None,
         **kwargs,
     ):
         super().__init__()
@@ -120,6 +120,7 @@ class HFTransformersInterface(nn.Module):
             cache_dir=save_path,
             return_unused_kwargs=True,
             trust_remote_code=trust_remote_code,
+            use_safetensors=True,
         )
 
         self.config = self.override_config(self.config)
@@ -144,6 +145,7 @@ class HFTransformersInterface(nn.Module):
             save_path=save_path,
             cache_dir=cache_dir,
             device=device,
+            use_safetensors=True,
             **kwargs,
         )
 
@@ -164,6 +166,7 @@ class HFTransformersInterface(nn.Module):
         save_path,
         cache_dir,
         device=None,
+        use_safetensors=True,
         **kwargs,
     ):
         """This function manages the source checking and loading of the params.
@@ -206,11 +209,13 @@ class HFTransformersInterface(nn.Module):
                 config=self.config,
                 cache_dir=save_path,
                 quantization_config=self.quantization_config,
+                use_safetensors=True,
                 **kwargs,
             )
 
         if device is not None:
             self.model.to(device)
+            logger.info(f"Model to {device}.")
 
     def _check_model_source(self, path, save_path):
         """Checks if the pretrained model has been trained with SpeechBrain and

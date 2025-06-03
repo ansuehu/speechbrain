@@ -79,6 +79,7 @@ class Wav2Vec2(HFTransformersInterface):
         self,
         source,
         save_path,
+        device,
         output_norm=False,
         freeze=False,
         freeze_feature_extractor=False,
@@ -87,7 +88,7 @@ class Wav2Vec2(HFTransformersInterface):
         **kwargs,
     ):
         super().__init__(
-            source=source, save_path=save_path, freeze=freeze, **kwargs
+            source=source, save_path=save_path, freeze=freeze, device=device, **kwargs
         )
 
         self.model.config.apply_spec_augment = apply_spec_augment
