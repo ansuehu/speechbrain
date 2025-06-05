@@ -157,3 +157,10 @@ dmypy.json
 
 # Mac OS
 .DS_Store
+
+
+*.wav
+*.ogg
+*.mp3
+
+**/infer_results/

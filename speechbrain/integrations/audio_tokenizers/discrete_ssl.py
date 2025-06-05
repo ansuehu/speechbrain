@@ -188,12 +188,14 @@ class DiscreteSSL(nn.Module):
         if layers_num:
             for i, layer in enumerate(layers_num):
                 file_patterns.append(
-                    f"kmeans/{kmeans_dataset}_{encoder_name}_k{num_clusters[i]}_L{layer}.pt"
+                    f"kmeans/{kmeans_dataset}_hubert_k{num_clusters[i]}_L{layer}.pt"
                 )
+            print(file_patterns)
         else:
             file_patterns.append(
-                f"kmeans/{kmeans_dataset}_hubert_k{num_clusters}_L9.pt"
+                f"kmeans/{kmeans_dataset}_hubert_k{num_clusters}_L7.pt"
             )
+            print(file_patterns)
         kmeans_dir = snapshot_download(
             repo_id=repo_id, allow_patterns=file_patterns, cache_dir=cache_dir
         )

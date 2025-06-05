@@ -233,7 +233,7 @@ def extract_miren(
     model.eval()
     kmeans = joblib.load("/home/andoni.sudupe/mHubert_finetune/checkpoints/kmeans/basque_hubert_k1000_L9.pkl")
 
-    encoder = HubertModel.from_pretrained(encoder_source, trust_remote_code=True, use_safetensors=True).to(device)
+    # encoder = HubertModel.from_pretrained(encoder_source, trust_remote_code=True, use_safetensors=True).to(device)
 
     for split in splits:
         dataset_path = data_folder / f"{split}.json"
