@@ -499,10 +499,10 @@ if __name__ == "__main__":
         overrides=overrides,
     )
 
-    from libritts_prepare import prepare_libritts
+    from multi_spk_prepare import prepare_multi_spk
 
     sb.utils.distributed.run_on_main(
-        prepare_libritts,
+        prepare_multi_spk,
         kwargs={
             "data_folder": hparams["data_folder"],
             "save_json_train": hparams["train_json"],
@@ -510,7 +510,7 @@ if __name__ == "__main__":
             "save_json_test": hparams["test_json"],
             "sample_rate": hparams["sample_rate"],
             "split_ratio": hparams["split_ratio"],
-            "libritts_subsets": hparams["libritts_subsets"],
+            "speaker_subsets": hparams["speaker_subsets"],
             "train_split": hparams["train_split"],
             "valid_split": hparams["valid_split"],
             "test_split": hparams["test_split"],
@@ -519,10 +519,10 @@ if __name__ == "__main__":
         },
     )
 
-    from extract_code import extract_libritts
+    from extract_code import extract_miren
 
     sb.utils.distributed.run_on_main(
-        extract_libritts,
+        extract_miren,
         kwargs={
             "data_folder": hparams["save_folder"],
             "splits": hparams["splits"],
@@ -532,23 +532,24 @@ if __name__ == "__main__":
             "encoder_type": hparams["encoder_type"],
             "encoder_source": hparams["encoder_hub"],
             "layer": hparams["layer"],
-            "save_folder": hparams["save_folder"],
+            "encoder_save_folder": hparams["encoder_save_folder"],
+            "codes_save_folder": hparams["codes_folder"],
             "sample_rate": hparams["sample_rate"],
-            "skip_extract": hparams["skip_extract"],
+            "skip_extract": hparams["skip_extract_code"],
         },
     )
 
-    from extract_speaker_embeddings import extract_libritts_embeddings
+    from extract_speaker_embeddings import extract_speaker_embeddings
 
     sb.utils.distributed.run_on_main(
-        extract_libritts_embeddings,
+        extract_speaker_embeddings,
         kwargs={
             "data_folder": hparams["data_folder"],
             "splits": hparams["splits"],
             "encoder_source": hparams["speaker_encoder_hub"],
             "save_folder": hparams["save_folder"],
             "sample_rate": hparams["sample_rate"],
-            "skip_extract": hparams["skip_extract"],
+            "skip_extract": hparams["skip_extract_emb"],
         },
     )
 

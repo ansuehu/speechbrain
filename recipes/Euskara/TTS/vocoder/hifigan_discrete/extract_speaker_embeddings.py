@@ -19,7 +19,7 @@ from speechbrain.dataio.dataio import load_pkl, save_pkl
 from speechbrain.inference.encoders import MelSpectrogramEncoder
 from speechbrain.utils.logger import get_logger
 
-OPT_FILE = "opt_libritts_extract_speaker.pkl"
+OPT_FILE = "opt_miren_extract_code.pkl"
 TRAIN_JSON = "train.json"
 VALID_JSON = "valid.json"
 TEST_JSON = "test.json"
@@ -100,7 +100,7 @@ def skip(splits, save_folder, conf):
     return skip
 
 
-def extract_libritts_embeddings(
+def extract_speaker_embeddings(
     data_folder,
     splits,
     encoder_source,

@@ -229,7 +229,7 @@ def extract_miren(
     # --- My code ---
     model_name = "Ansu/mHubert-basque-k1000-L9"
     processor = Wav2Vec2Processor.from_pretrained(model_name)
-    model = HubertModel.from_pretrained(model_name)
+    model = HubertModel.from_pretrained(model_name).to(device)
     model.eval()
     kmeans = joblib.load("/home/andoni.sudupe/mHubert_finetune/checkpoints/kmeans/basque_hubert_k1000_L9.pkl")
 
@@ -273,7 +273,7 @@ def extract_miren(
 
                 # ---My code---
                 inputs = processor(audio, sampling_rate=16000, return_tensors="pt", padding=True)
-                inputs['input_values'] = inputs['input_values'].squeeze(0)
+                inputs['input_values'] = inputs['input_values'].squeeze(0).to(device)
                 with torch.no_grad():
                     outputs = model(**inputs, output_hidden_states=True)
                 features = outputs.hidden_states[9].squeeze(0).cpu().numpy()

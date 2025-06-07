@@ -15,7 +15,7 @@ output_folder: !ref ./results/hifigan_spk/<seed>
 save_folder: !ref <output_folder>/save
 train_log: !ref <output_folder>/train_log.txt
 progress_sample_path: !ref <output_folder>/samples
-epochs: 150
+epochs: 300
 keep_checkpoint_interval: 50
 use_tensorboard: False
 
@@ -25,14 +25,16 @@ use_tensorboard: False
 data_folder: !PLACEHOLDER # e.g, /datasets/LibriTTS
 # Data will be automatically downloaded in the data folder
 # (and resampled to the specified sampling rate)
-
+train_split: None
+valid_split: None
+test_split: None
 train_json: !ref <save_folder>/train.json
 valid_json: !ref <save_folder>/valid.json
 test_json: !ref <save_folder>/test.json
-
+speaker_subsets: ["miren", "nerea"]
 splits: ["train", "valid", "test"]
 split_ratio: [80, 10, 10]
-skip_prep: False
+skip_prep: True
 
 ########################################################
 #  Encoder  |  HF model                                #
@@ -41,14 +43,16 @@ skip_prep: False
 #  Wav2Vec2 |  facebook/wav2vec2-large-960h-lv60-self  #
 #  WavLM    |  microsoft/wavlm-large                   #
 ########################################################
-kmeans_folder: speechbrain/SSL_Quantization
+kmeans_folder: Ansu/hifigan-hubert-k1000-LibriTTS
 kmeans_dataset: basque
 codes_folder: !ref <save_folder>/codes
 encoder_type: HuBERT
 encoder_hub: Ansu/mHubert-basque-k1000-L9
+encoder_save_folder: !ref <save_folder>/ssl_encoder
 layer: [9]
 num_clusters: 1000
-skip_extract: False
+skip_extract_code: True
+skip_extract_emb: True
 
 speaker_embeddings_folder: !ref <save_folder>/speaker_embeddings
 speaker_encoder_hub: speechbrain/spkrec-ecapa-voxceleb-mel-spec
@@ -80,7 +84,8 @@ learning_rate: 0.0002
 weight_decay: 0.9999
 adam_b1: 0.8
 adam_b2: 0.99
-batch_size: 32
+batch_size: 128 #minimum 32
+
 
 train_dataloader_opts:
   batch_size: !ref <batch_size>
@@ -103,7 +108,7 @@ multi_speaker: True
 normalize_speaker_embeddings: False
 
 # embedding params
-vocab_size: 6001 # K-means size + 1 for padding 1000x6
+vocab_size: 1001 # K-means size + 1 for padding 1000x6
 embedding_dim: 1024
 
 # generator params

@@ -13,14 +13,21 @@
 
 # Inference with a file or folder
 # srun python -u ./infer.py \
-#     --input_path path/to/audio_or_folder \
+#     --input_path ./oronaudiyue.mp3 \
 #     --hubert_repo Ansu/mHubert-basque-k1000-L9 \
 #     --vocoder_repo Ansu/hifigan-hubert-k1000-miren
 
 # Inference with a json file
+# srun python -u ./infer.py \
+#     --json_file ./results/hifi_gan/4322/save/test.json \
+#     --hubert_repo Ansu/mHubert-basque-k1000-L9 \
+#     --vocoder_repo Ansu/hifigan-hubert-k1000-miren \
+#     --output_dir ./test_results/ \
+#     --max_files 10 \
+#     --shuffle True
+
 srun python -u ./infer.py \
-    --json_file ./results/hifi_gan/4322/save/test.json \
+    --input_path /home/andoni.sudupe/speechbrain/recipes/Euskara/miren-hifigan/wavs/ESP00001.wav \
     --hubert_repo Ansu/mHubert-basque-k1000-L9 \
-    --vocoder_repo Ansu/hifigan-hubert-k1000-miren \
-    --output_dir ./test_results/ \
-    --max_files 5
+    --vocoder_repo ./results/hifigan_spk/4321/save/CKPT+2025-06-07+14-36-43+00 \
+    --spk miren
