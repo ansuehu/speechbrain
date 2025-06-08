@@ -153,10 +153,11 @@ if __name__ == '__main__':
             mcd = calculate_mcd_aligned(ref_wave[..., :min_len].squeeze(), synth_wave[..., :min_len].squeeze(), args.sr)
             # mcd = calculate_mcd_tensor_batch(ref_wave[..., :min_len].squeeze(), synth_wave[..., :min_len].squeeze(), args.sr)
             mcd_scores[k] = mcd
-        print(f"Calculating MCD for batch took {time.time() - hasi:.2f} seconds")
+        # print(f"Calculating MCD for batch took {time.time() - hasi:.2f} seconds")
 
     mean_mcd = np.mean(list(mcd_scores.values()))
-    results = {"mean_mcd": mean_mcd,"individual_mcd": mcd_scores}
+    # Save results and args
+    results = {"args": vars(args), "mean_mcd": mean_mcd, "individual_mcd": mcd_scores}
     with open(args.output_file, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"Mean MCD: {mean_mcd:.4f}")

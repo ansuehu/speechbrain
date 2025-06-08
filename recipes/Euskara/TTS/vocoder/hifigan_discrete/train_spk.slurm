@@ -7,8 +7,8 @@
 #SBATCH --time=8-00:00 # No time limit
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=asudupe008@ikasle.ehu.eus
-#SBATCH --output=/home/andoni.sudupe/.slurm/hifigan-euskara_spk.out.log
-#SBATCH --error=/home/andoni.sudupe/.slurm/hifigan-euskara_spk.err.log
+#SBATCH --output=/home/andoni.sudupe/.slurm/hifigan-euskara_spk_3.out.log
+#SBATCH --error=/home/andoni.sudupe/.slurm/hifigan-euskara_spk_3.err.log
 #SBATCH --chdir=/home/andoni.sudupe/speechbrain/recipes/Euskara/TTS/vocoder/hifigan_discrete
 
 srun python ./train_spk.py ./hparams/train_spk.yaml --data_folder=/data/aholab/tts/eu/female/gaitu/

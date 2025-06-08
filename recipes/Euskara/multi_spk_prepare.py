@@ -104,12 +104,12 @@ def prepare_multi_spk(
     data_split = split_sets(wav_list, split_ratio)
     # Creating json files
     create_json(
-        data_split["train"], save_json_train, sample_rate, model_name
+        data_split["train"], save_json_train, sample_rate, model_name, speaker_subsets
     )
     create_json(
-        data_split["valid"], save_json_valid, sample_rate, model_name
+        data_split["valid"], save_json_valid, sample_rate, model_name, speaker_subsets
     )
-    create_json(data_split["test"], save_json_test, sample_rate, model_name)
+    create_json(data_split["test"], save_json_test, sample_rate, model_name, speaker_subsets)
 
 
 def prepare_split(data_folder, speaker_subsets):
@@ -149,7 +149,7 @@ def prepare_split(data_folder, speaker_subsets):
     return wav_list
 
 
-def create_json(wav_list, json_file, sample_rate, model_name=None):
+def create_json(wav_list, json_file, sample_rate, model_name=None, speaker_subsets=None):
     """
     Creates the json file given a list of wav files.
     Arguments
@@ -165,7 +165,7 @@ def create_json(wav_list, json_file, sample_rate, model_name=None):
     """
 
     json_dict = {}
-    name_to_id = {'miren': 0, 'nerea':1}
+    name_to_id = {k:i for i, k in enumerate(speaker_subsets)}
 
     # Processes all the wav files in the list
     for wav_file in tqdm(wav_list):
@@ -196,8 +196,9 @@ def create_json(wav_list, json_file, sample_rate, model_name=None):
                 if normalized_text.__contains__("}"):
                     normalized_text = normalized_text.replace("}", "")
         except FileNotFoundError:
+            normalized_text = " "
             print(f"Warning: The file {normalized_text_path} does not exist.")
-            continue
+            # continue
 
         # Resamples the audio file if required
         # if sig_sr != sample_rate:

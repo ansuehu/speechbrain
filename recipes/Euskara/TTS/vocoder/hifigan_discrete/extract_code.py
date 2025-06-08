@@ -21,7 +21,6 @@ from speechbrain.integrations.audio_tokenizers.discrete_ssl import DiscreteSSL
 from speechbrain.utils.logger import get_logger
 from transformers import HubertModel
 import time
-from apply_kmeans import assign_tokens
 from transformers import Wav2Vec2Processor, HubertModel
 import joblib
 

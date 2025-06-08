@@ -19,7 +19,7 @@ from speechbrain.dataio.dataio import load_pkl, save_pkl
 from speechbrain.inference.encoders import MelSpectrogramEncoder
 from speechbrain.utils.logger import get_logger
 
-OPT_FILE = "opt_miren_extract_code.pkl"
+OPT_FILE = "opt_miren_extract_emb.pkl"
 TRAIN_JSON = "train.json"
 VALID_JSON = "valid.json"
 TEST_JSON = "test.json"
@@ -153,11 +153,11 @@ def extract_speaker_embeddings(
 
     save_folder = pl.Path(save_folder)
     # Check if this phase is already done (if so, skip it)
-    if skip(splits, save_folder, conf):
-        logger.info(
-            "Skipping speaker embeddings extraction, completed in previous run."
-        )
-        return
+    # if skip(splits, save_folder, conf):
+    #     logger.info(
+    #         "Skipping speaker embeddings extraction, completed in previous run."
+    #     )
+    #     return
 
     # Fetch device
     device = get_device(use_cuda=True)
