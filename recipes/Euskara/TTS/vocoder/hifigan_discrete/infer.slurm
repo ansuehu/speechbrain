@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #SBATCH --partition=gpu-H100
 #SBATCH --job-name=hifigan-infer # Name of the process
-#SBATCH --gres=gpu:1 # Number of GPUs
-#SBATCH --cpus-per-gpu=2 # Number of CPU cores (2 is reasonable)
-#SBATCH --mem-per-gpu=16GB # RAM memory needed (8-16GB)
+#SBATCH --gres=gpu:0 # Number of GPUs
+#SBATCH --cpus-per-task=2 # Number of CPU cores (2 is reasonable)
+#SBATCH --mem=16GB # RAM memory needed (8-16GB)
 #SBATCH --time=10:00:00 # No time limit
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=asudupe008@ikasle.ehu.eus
@@ -27,7 +27,7 @@
 #     --shuffle True
 
 srun python -u ./infer.py \
-    --input_path /home/andoni.sudupe/speechbrain/recipes/Euskara/miren-hifigan/wavs/ESP00001.wav \
+    --input_path /data/aholab/tts/eu/female/gaitu/miren/ESP00486.wav \
     --hubert_repo Ansu/mHubert-basque-k1000-L9 \
-    --vocoder_repo ./results/hifigan_spk/4321/save/CKPT+2025-06-07+14-36-43+00 \
-    --spk miren
+    --vocoder_repo ./results/hifigan_spk/4322/save/CKPT+2025-06-13+18-27-39+00 \
+    --spk miren nerea jon

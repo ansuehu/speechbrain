@@ -11,11 +11,11 @@
 ###################################
 seed: 4322
 __set_seed: !apply:speechbrain.utils.seed_everything [!ref <seed>]
-output_folder: !ref ./results/hifigan_spk/<seed>
+output_folder: !ref /scratch/andoni.sudupe/models/hifigan/hifigan_spk_5/<seed>
 save_folder: !ref <output_folder>/save
 train_log: !ref <output_folder>/train_log.txt
 progress_sample_path: !ref <output_folder>/samples
-epochs: 200
+epochs: 500
 keep_checkpoint_interval: 50
 use_tensorboard: False
 
@@ -31,7 +31,7 @@ test_split: None
 train_json: !ref <save_folder>/train.json
 valid_json: !ref <save_folder>/valid.json
 test_json: !ref <save_folder>/test.json
-speaker_subsets: ["miren", "nerea", "jon"]
+speaker_subsets: ["miren", "nerea", "jon", "marina", "alex"]
 splits: ["train", "valid", "test"]
 split_ratio: [80, 10, 10]
 skip_prep: True
@@ -51,8 +51,8 @@ encoder_hub: Ansu/mHubert-basque-k1000-L9
 encoder_save_folder: !ref <save_folder>/ssl_encoder
 layer: [9]
 num_clusters: 1000
-skip_extract_code: False
-skip_extract_emb: False
+skip_extract_code: True
+skip_extract_emb: True
 
 speaker_embeddings_folder: !ref <save_folder>/speaker_embeddings
 speaker_encoder_hub: speechbrain/spkrec-ecapa-voxceleb-mel-spec

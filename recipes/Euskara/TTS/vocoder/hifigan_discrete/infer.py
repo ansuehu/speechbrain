@@ -81,7 +81,7 @@ def main():
     parser.add_argument("--kmeans_path", type=str, default="kmeans/basque_hubert_k1000_L9.pt", help="Path to KMeans .pt file in Hubert repository.")
     parser.add_argument("--sr", type=int, default=16000, help="Target sampling rate.")
     parser.add_argument("--shuffle", type=bool, default=False, help="Shuffle audio list.")
-    parser.add_argument("--spk", type=str, default=None, choices=[None, 'miren', 'nerea'], help="Speaker name for audio files.")
+    parser.add_argument("--spk", type=str, default=None, choices=[None, 'miren', 'nerea', 'jon'], nargs='+', help="Speaker name for audio files.")
 
     args = parser.parse_args()
 
@@ -117,11 +117,21 @@ def main():
     name_to_speaker = {
         'miren': 0,
         'nerea': 1,
+        'jon': 2,
+    }
+    speaker_to_name = {
+        0: 'miren',
+        1: 'nerea',
+        2: 'jon',
     }
     if args.spk is not None:
-        spk_emb = np.load(f"./results/hifigan_spk/4321/save/speaker_embeddings/{name_to_speaker[args.spk]}_ESP00001.npy")
-        spk_emb = torch.FloatTensor(spk_emb).unsqueeze(0).to(device)
-        print(f"Using speaker embedding for {args.spk} shape {spk_emb.shape}")
+        spk_embs = []
+        for spk in args.spk:
+            #get path of vocoder_repo
+            path_vocoder = os.path.join(*args.vocoder_repo.split(os.sep)[:-1])
+            spk_emb = np.load(f"{path_vocoder}/speaker_embeddings/{name_to_speaker[spk]}_ESP00001.npy")
+            spk_embs.append(torch.FloatTensor(spk_emb).unsqueeze(0).to(device))
+            print(f"Using speaker embedding for {spk} shape {spk_emb.shape}")
 
 
     for audio_path in audio_files[:args.max_files]:
@@ -134,17 +144,27 @@ def main():
         tokens = generate_tokens(audio, processor, model, kmeans, device)
         buk = time.time()
         if args.spk is not None:
-            sig = hifi_gan_unit.decode_batch(tokens.unsqueeze(0).to(device), spk_emb)
+            sig = []
+            for spk_emb in spk_embs:
+                sig.append(hifi_gan_unit.decode_batch(tokens.unsqueeze(0).to(device), spk_emb))
         else:
             sig = hifi_gan_unit.decode_batch(tokens.unsqueeze(0).to(device))
 
         print(f'{buk-has:.2}s to encode and {time.time()-buk}s to decode')
 
-        calculated_mcd = calculate_mcd(audio.squeeze(0).cpu(), sig.squeeze(0).cpu(), args.sr)
-        print(f'MCD for {audio_basename}: {calculated_mcd:.2f}')
-        output_path = get_unique_filename(audio_basename, ".wav", directory=args.output_dir)
-        torchaudio.save(output_path, sig.squeeze(0).cpu(), args.sr)
-        print(f'Audio saved in {output_path}')
+        if args.spk is not None:
+            for s, speaker in zip(sig, args.spk):
+                calculated_mcd = calculate_mcd(audio.squeeze(0).cpu(), s.squeeze(0).cpu(), args.sr)
+                print(f'MCD for {audio_basename}: {calculated_mcd:.2f}')
+                output_path = get_unique_filename(audio_basename, f"_{speaker}.wav", directory=args.output_dir)
+                torchaudio.save(output_path, s.squeeze(0).cpu(), args.sr)
+                print(f'Audio saved in {output_path}')
+        else:
+            calculated_mcd = calculate_mcd(audio.squeeze(0).cpu(), sig.squeeze(0).cpu(), args.sr)
+            print(f'MCD for {audio_basename}: {calculated_mcd:.2f}')
+            output_path = get_unique_filename(audio_basename, ".wav", directory=args.output_dir)
+            torchaudio.save(output_path, sig.squeeze(0).cpu(), args.sr)
+            print(f'Audio saved in {output_path}')
 
 if __name__ == "__main__":
     main()
