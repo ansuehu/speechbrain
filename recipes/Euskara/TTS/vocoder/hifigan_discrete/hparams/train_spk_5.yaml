@@ -22,9 +22,7 @@ use_tensorboard: False
 #################################
 # Data files and pre-processing #
 #################################
-data_folder: !PLACEHOLDER # e.g, /datasets/LibriTTS
-# Data will be automatically downloaded in the data folder
-# (and resampled to the specified sampling rate)
+data_folder: !PLACEHOLDER 
 train_split: None
 valid_split: None
 test_split: None
